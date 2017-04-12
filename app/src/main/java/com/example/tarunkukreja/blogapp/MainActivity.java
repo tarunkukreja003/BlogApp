@@ -2,6 +2,7 @@ package com.example.tarunkukreja.blogapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
  //   FloatingActionButton fab ;
     RecyclerView recyclerView ;
     DatabaseReference databaseReference;
+    FirebaseAuth mAuth ;
+    FirebaseAuth.AuthStateListener mAuthListener ;
    // ChildEventListener mChildEventListener ;
   //  BlogAdapter mBlogAdapter ;
     FirebaseRecyclerAdapter<Blog, BlogAdapter> firebaseRecyclerAdapter ;
@@ -40,8 +44,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.blog_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAuth = FirebaseAuth.getInstance() ;
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Blog");
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                if(mAuth.getCurrentUser() == null){
+
+                }
+            }
+        };
        // mBlogAdapter = new BlogAdapter() ;
 
 //       // fab.setOnClickListener(new View.OnClickListener() {

@@ -18,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class PostActivity extends AppCompatActivity {
     private Button mPostButton ;
     private static final int GALLERY_REQ_CODE = 1 ;
     private Uri mImageUri = null;
+    private Uri resultUri = null ;
 
     StorageReference mStorageReference ;
     DatabaseReference mDatabaseReference ;
@@ -80,8 +83,8 @@ public class PostActivity extends AppCompatActivity {
             blogObj.setDecription(desc_val);
             Log.d(LOG_TAG, "Desc in blog class set");
 
-           StorageReference filePath = mStorageReference.child("blog_photos").child(mImageUri.getLastPathSegment()) ;
-           filePath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+           StorageReference filePath = mStorageReference.child("blog_photos").child(resultUri.getLastPathSegment()) ;
+           filePath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                @Override
                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                    Uri downloadUrl = taskSnapshot.getDownloadUrl() ;
@@ -107,7 +110,23 @@ public class PostActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_REQ_CODE && resultCode == RESULT_OK){
             mImageUri = data.getData() ;
-            mImageButton.setImageURI(mImageUri);
+            CropImage.activity(mImageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(4, 3)
+                    .start(this);
+
+
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                 resultUri = result.getUri();
+                mImageButton.setImageURI(resultUri);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
     }
 }
