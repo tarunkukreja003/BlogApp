@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseAuth mAuth ;
     FirebaseAuth.AuthStateListener mAuthListener ;
+    LinearLayoutManager linearLayoutManager ;
    // ChildEventListener mChildEventListener ;
   //  BlogAdapter mBlogAdapter ;
     FirebaseRecyclerAdapter<Blog, BlogAdapter> firebaseRecyclerAdapter ;
@@ -43,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
 //        fab = (FloatingActionButton)findViewById(R.id.floatingActionButton) ;
         recyclerView = (RecyclerView) findViewById(R.id.blog_recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager = new LinearLayoutManager(this) ;
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         mAuth = FirebaseAuth.getInstance() ;
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Blog");
@@ -52,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 if(mAuth.getCurrentUser() == null){
-
+                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class) ;
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) ;
+                    startActivity(loginIntent);
                 }
             }
         };
@@ -73,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onStart () {
             super.onStart();
             Log.d(LOG_TAG, "onStart() called");
+            mAuth.addAuthStateListener(mAuthListener);
+            Log.d(LOG_TAG, "Auth listener attached");
             addChildListen();
             Log.d(LOG_TAG, "Children Added") ;
 
@@ -125,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.addpost){
             Intent intent = new Intent(MainActivity.this, PostActivity.class) ;
             startActivity(intent);
+        }
+
+        if(item.getItemId() == R.id.sign_out){
+            mAuth.signOut();
         }
         return true;
     }
