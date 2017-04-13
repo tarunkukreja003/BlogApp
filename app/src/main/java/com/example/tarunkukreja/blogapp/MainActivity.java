@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
  //   FloatingActionButton fab ;
     RecyclerView recyclerView ;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseRefernceBlog;
+    DatabaseReference databaseReferenceUsers ;
     FirebaseAuth mAuth ;
     FirebaseAuth.AuthStateListener mAuthListener ;
     LinearLayoutManager linearLayoutManager ;
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance() ;
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Blog");
+        databaseRefernceBlog = FirebaseDatabase.getInstance().getReference().child("Blog");
+        databaseReferenceUsers= FirebaseDatabase.getInstance().getReference().child("Users");
+        databaseReferenceUsers.keepSynced(true);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -88,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Blog, BlogAdapter>(Blog.class,
                     R.layout.row,
                     BlogAdapter.class,
-                    databaseReference) {
+                    databaseRefernceBlog) {
                 @Override
                 protected void populateViewHolder(BlogAdapter viewHolder, Blog model, int position) {
                       viewHolder.bindBlog(model);
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addChildListen(){
         blogArrayList = new ArrayList<>() ;
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseRefernceBlog.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
