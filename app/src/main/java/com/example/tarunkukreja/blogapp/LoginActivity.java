@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mName ;
     private EditText mEmail ;
     private EditText mPass ;
+    private TextView mSignInText ;
     private Button mLoginButton ;
     private FirebaseAuth mFirebaseAuth ;
     private ProgressDialog mProgressDialog ;
@@ -38,6 +40,15 @@ public class LoginActivity extends AppCompatActivity {
         mEmail= (EditText)findViewById(R.id.email);
         mPass = (EditText)findViewById(R.id.password);
         mLoginButton = (Button)findViewById(R.id.loginButton);
+        mSignInText = (TextView)findViewById(R.id.sign_in) ;
+        mSignInText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mainIntent = new Intent(LoginActivity.this, SignInActivity.class) ;
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainIntent);
+            }
+        });
         mFirebaseAuth = FirebaseAuth.getInstance() ;
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         mProgressDialog = new ProgressDialog(this) ;
@@ -54,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
        final String name =  mName.getText().toString();
        final String email = mEmail.getText().toString() ;
        String pass = mPass.getText().toString() ;
-
         if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)){
             mProgressDialog.setMessage("Signing Up");
             mProgressDialog.show();

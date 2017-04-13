@@ -42,6 +42,29 @@
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
-        android:text="Button" />
+        android:layout_marginBottom="30dp"
+        android:text="Sign Up" />
+
+    <TextView
+        android:id="@+id/already_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButton"
+        android:text="@string/already_have_an_account"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/already_account"
+        android:layout_marginBottom="19dp"
+        android:gravity="center"
+        android:text="Sign In"
+        android:textColor="@color/colorPrimary" />
+
 
 </RelativeLayout>
